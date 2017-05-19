@@ -49,7 +49,7 @@ var app = app || {};
     Article.all.push(new Article(ele));
   });
   */
-    Article.all = rawData.map(ele => new Article(ele));
+    Article.all = rows.map(ele => new Article(ele));
 
   };
 
@@ -68,7 +68,8 @@ var app = app || {};
 
   // TODO: Chain together a `map` and a `reduce` call to produce an array of unique author names. You will
   // probably need to use the optional accumulator argument in your reduce call.
-  Article.allAuthors = () => Article.all.map(n => n.author).reduce((acc, val) => acc.find(val) ? acc : acc.concat(val), [])
+
+  Article.allAuthors = () => Article.all.map(n => n.author).reduce((a, v) => a.indexOf(v) === -1 ? a.concat(v) : a,[]);
 
   Article.numWordsByAuthor = () => {
     return Article.allAuthors().map(author => {
@@ -79,9 +80,11 @@ var app = app || {};
       // The first property should be pretty straightforward, but you will need to chain
       // some combination of filter, map, and reduce to get the value for the second
       // property.
-      const number = Article.all.reduce((a, v) => {
+      let number = Article.all.reduce((a, v) => {
         return a += (v.author === author ? v.body.split(' ').length : 0)
       }, 0)
+
+      number = ` ${number.toString()}`
 
       return { author, number };
     })
